@@ -135,7 +135,7 @@ public class CacheManifestServlet1Test {
     @Test
     public void shouldAllowDefineDifferentNameForMappingInManifest() throws Exception {
         // given
-        when(servletConfig.getInitParameter("resources")).thenReturn("/index.html=/b.html");
+        when(servletConfig.getInitParameter("resources")).thenReturn("/b.html=/index.html");
         servlet.init(servletConfig);
         // when
         servlet.doGet(request, response);
@@ -157,6 +157,15 @@ public class CacheManifestServlet1Test {
     public void shouldThrowExceptionIfCantLoadResource() throws Exception {
         // given
         when(servletConfig.getInitParameter("resources")).thenReturn("/no_found.html");
+        // when
+        servlet.init(servletConfig);
+    }
+
+    @Test(expected = ServletException.class)
+    public void shouldThrowExceptionIfEmptyAlias() throws Exception {
+        // given
+        when(servletConfig.getInitParameter("resources")).thenReturn("/index.html=");
+        // when
         servlet.init(servletConfig);
     }
 

@@ -54,7 +54,7 @@ public class CacheManifestServlet extends HttpServlet {
         response.getWriter().append(content);
     }
 
-    private List<Resource> parseResources(final ServletConfig config) {
+    private List<Resource> parseResources(final ServletConfig config) throws ServletException {
         final List<Resource> resources = new ArrayList<Resource>();
 
         final String resourcesValue = config.getInitParameter(RESOURCES_PARAMETER);
@@ -63,9 +63,11 @@ public class CacheManifestServlet extends HttpServlet {
                 final int aliasIndex = resourceString.lastIndexOf('=');
                 final Resource resource;
                 if (aliasIndex > -1) {
-                    resource = new Resource(
-                            resourceString.substring(0, aliasIndex).trim(),
-                            resourceString.substring(aliasIndex + 1).trim());
+                    final String alias = resourceString.substring(0, aliasIndex).trim();
+                    final String name = resourceString.substring(aliasIndex + 1).trim();
+                    if (alias.isEmpty()) throw new ServletException(
+                            "Empty alias provided if that's what you want just remove =!");
+                    resource = new Resource(name, alias);
                 } else {
                     resource = new Resource(
                             resourceString.trim(),
