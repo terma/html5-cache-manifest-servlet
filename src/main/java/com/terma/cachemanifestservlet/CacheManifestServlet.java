@@ -60,7 +60,7 @@ public class CacheManifestServlet extends HttpServlet {
         final String resourcesValue = config.getInitParameter(RESOURCES_PARAMETER);
         if (resourcesValue != null) {
             for (final String resourceString : resourcesValue.split(",")) {
-                final int aliasIndex = resourceString.lastIndexOf('=');
+                final int aliasIndex = resourceString.indexOf('=');
                 final Resource resource;
                 if (aliasIndex > -1) {
                     final String alias = resourceString.substring(0, aliasIndex).trim();
