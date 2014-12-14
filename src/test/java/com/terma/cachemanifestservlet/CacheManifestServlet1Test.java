@@ -41,6 +41,7 @@ public class CacheManifestServlet1Test {
     @Test
     public void shouldReturnCacheManifestContentType() throws Exception {
         // given
+        when(servletConfig.getInitParameter("resources")).thenReturn("");
         servlet.init(servletConfig);
         // when
         servlet.doGet(request, response);
@@ -51,6 +52,7 @@ public class CacheManifestServlet1Test {
     @Test
     public void givenNoResourcesShouldProvideShaAndAllFromNetwork() throws Exception {
         // given
+        when(servletConfig.getInitParameter("resources")).thenReturn(" ");
         servlet.init(servletConfig);
         // when
         servlet.doGet(request, response);
@@ -165,6 +167,14 @@ public class CacheManifestServlet1Test {
     public void shouldThrowExceptionIfEmptyAlias() throws Exception {
         // given
         when(servletConfig.getInitParameter("resources")).thenReturn("/index.html=");
+        // when
+        servlet.init(servletConfig);
+    }
+
+    @Test(expected = ServletException.class)
+    public void shouldThrowExceptionIfNoResourcesInitParameterProvided() throws Exception {
+        // given
+        when(servletConfig.getInitParameter("resources")).thenReturn(null);
         // when
         servlet.init(servletConfig);
     }

@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class ResourceDigest {
+class ResourceDigest {
 
     private final MessageDigest digest;
 

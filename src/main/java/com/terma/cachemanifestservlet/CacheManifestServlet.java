@@ -58,23 +58,24 @@ public class CacheManifestServlet extends HttpServlet {
         final List<Resource> resources = new ArrayList<Resource>();
 
         final String resourcesValue = config.getInitParameter(RESOURCES_PARAMETER);
-        if (resourcesValue != null) {
-            for (final String resourceString : resourcesValue.split(",")) {
-                final int aliasIndex = resourceString.indexOf('=');
-                final Resource resource;
-                if (aliasIndex > -1) {
-                    final String alias = resourceString.substring(0, aliasIndex).trim();
-                    final String name = resourceString.substring(aliasIndex + 1).trim();
-                    if (alias.isEmpty()) throw new ServletException(
-                            "Empty alias provided if that's what you want just remove =!");
-                    resource = new Resource(name, alias);
-                } else {
-                    resource = new Resource(
-                            resourceString.trim(),
-                            resourceString.trim());
-                }
-                resources.add(resource);
+        if (resourcesValue == null) throw new ServletException(
+                "Please provide servlet init parameter " + RESOURCES_PARAMETER);
+
+        for (final String resourceString : split(resourcesValue, ",")) {
+            final int aliasIndex = resourceString.indexOf('=');
+            final Resource resource;
+            if (aliasIndex > -1) {
+                final String alias = resourceString.substring(0, aliasIndex).trim();
+                final String name = resourceString.substring(aliasIndex + 1).trim();
+                if (alias.isEmpty()) throw new ServletException(
+                        "Empty alias provided if that's what you want just remove =!");
+                resource = new Resource(name, alias);
+            } else {
+                resource = new Resource(
+                        resourceString.trim(),
+                        resourceString.trim());
             }
+            resources.add(resource);
         }
 
         return resources;
@@ -88,6 +89,11 @@ public class CacheManifestServlet extends HttpServlet {
             digest.update(resource.alias + resource.name, stream);
         }
         return digest.digest();
+    }
+
+    private String[] split(final String string, final String delimiter) {
+        if (string == null || string.trim().isEmpty()) return new String[0];
+        else return string.trim().split(delimiter);
     }
 
     private class Resource {
