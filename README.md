@@ -78,10 +78,10 @@ NETWORK:
 
 ### Virtual resource
 
-Sometime you resource name in your webapp has different name than public name (in manifest file as well) for example page ```/WEB-INF/jsp/page.jsp``` could be mapped to ```/``` to achive that
+Sometime you resource name in your webapp has different name than public name (in manifest file as well) for example page ```/WEB-INF/jsp/page.jsp``` could be mapped to ```/public``` to achive that
 
 ```xml
 <param-value>
-  /=/WEB-INF/jsp/page.jsp
+  /public=/WEB-INF/jsp/page.jsp
 </param-value>
 ```
