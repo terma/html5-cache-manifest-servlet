@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CacheManifestServlet extends HttpServlet {
@@ -22,13 +21,13 @@ public class CacheManifestServlet extends HttpServlet {
     public void init(final ServletConfig config) throws ServletException {
         super.init(config);
 
-        final List<Resource> resources = getResources(config);
+        final List<Resource> resources = parseResources(config);
 
         final String sha;
         try {
             sha = calcResourcesSha(resources);
         } catch (final Exception ex) {
-            throw new ServletException("Can't calculate digest for " + Arrays.asList(resources), ex);
+            throw new ServletException("Can't calculate digest for " + resources, ex);
         }
 
         final StringBuilder contentBuffer = new StringBuilder();
@@ -55,7 +54,7 @@ public class CacheManifestServlet extends HttpServlet {
         response.getWriter().append(content);
     }
 
-    private List<Resource> getResources(final ServletConfig config) {
+    private List<Resource> parseResources(final ServletConfig config) {
         final List<Resource> resources = new ArrayList<Resource>();
 
         final String resourcesValue = config.getInitParameter(RESOURCES_PARAMETER);
@@ -83,6 +82,7 @@ public class CacheManifestServlet extends HttpServlet {
         final ResourceDigest digest = new ResourceDigest();
         for (final Resource resource : resources) {
             final InputStream stream = getServletContext().getResourceAsStream(resource.name);
+            if (stream == null) throw new IOException("Can't load resource " + resource.name);
             digest.update(resource.alias + resource.name, stream);
         }
         return digest.digest();
@@ -96,6 +96,11 @@ public class CacheManifestServlet extends HttpServlet {
         private Resource(String name, String alias) {
             this.name = name;
             this.alias = alias;
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
 
     }
