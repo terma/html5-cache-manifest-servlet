@@ -1,7 +1,7 @@
 Cache Manifest Servlet
 ======================
 
-[![Build Status](https://travis-ci.org/terma/cache-manifest-servlet.svg)](https://travis-ci.org/terma/cache-manifest-servlet)
+[![Build Status](https://travis-ci.org/terma/html5-cache-manifest-servlet.svg?branch=master)](https://travis-ci.org/terma/html5-cache-manifest-servlet)
 
 ## Intro
 
